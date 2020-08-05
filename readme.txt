@@ -1,1 +1,1 @@
-hello guys
+code assembled for personal projects or study etc
