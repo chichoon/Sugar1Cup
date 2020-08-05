@@ -1,1 +1,1 @@
-code assembled for personal projects or study etc
+code assembled for personal projects (graduation)
