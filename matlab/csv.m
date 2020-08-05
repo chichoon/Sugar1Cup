@@ -31,10 +31,18 @@ for i = 1 : N
     %print individual graph
     scatter3(X, Y, Z, 25, C, '*');
     axis([0 255 0 255 0 255]);
+    title(strcat(filename, ' RGB scatter'));
+    xlabel('R');
+    ylabel('G');
+    zlabel('B');
     saveas(gcf, strcat(strcat('00', filename), '.png')); 
 end
 %print all-in-one graph with randomly generated color plot
 %arrC = horzcat(arrX, arrY, arrZ) / 255;
 scatter3(arrX, arrY, arrZ, 25, arrC, '*');
 axis([0 255 0 255 0 255]);
+title('RGB scatter');
+xlabel('R');
+ylabel('G');
+zlabel('B');
 saveas(gcf, '0000graph.png');
