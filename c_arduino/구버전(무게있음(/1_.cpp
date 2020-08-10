@@ -132,3 +132,77 @@ RGB TCS_Get_RGBData()
     DEV_Delay_ms(154);
     return temp;
 }
+
+Hx711::Hx711(uint8_t pin_dout, uint8_t pin_slk) :
+    DOUT(pin_dout), SCK(pin_slk)
+{
+  pinMode(SCK, OUTPUT);
+  pinMode(DOUT, INPUT);
+
+  digitalWrite(SCK, HIGH);
+  delayMicroseconds(100);
+  digitalWrite(SCK, LOW);
+
+  nomalvalue();
+  this->setOffset(nomalvalue());
+  this->setScale();
+}
+
+Hx711::~Hx711()
+{
+
+}
+
+long Hx711::nomalvalue(byte times)
+{
+  long sum = 0;
+  for (byte i = 0; i < times; i++)
+  {
+    sum += value();
+  }
+
+  return sum / times;
+}
+
+long Hx711::value()
+{
+  byte data[3];
+
+  while (digitalRead(DOUT))
+    ;
+
+  for (byte j = 3; j--;)
+  {
+    for (char i = 8; i--;)
+    {
+      digitalWrite(SCK, HIGH);
+      bitWrite(data[j], i, digitalRead(DOUT));
+      digitalWrite(SCK, LOW);
+    }
+  }
+
+  digitalWrite(SCK, HIGH);
+  digitalWrite(SCK, LOW);
+
+  data[2] ^= 0x80;
+
+  return ((uint32_t) data[2] << 16) | ((uint32_t) data[1] << 8)
+      | (uint32_t) data[0];
+}
+
+void Hx711::setOffset(long offset)
+{
+  _offset = offset;
+}
+
+void Hx711::setScale(float scale)
+{
+  _scale = scale;
+}
+
+float Hx711::gram()
+{
+  long val = (nomalvalue() - _offset);
+  return (float) val / _scale;
+}
+

@@ -1,0 +1,8 @@
+#go bin & pkg
+model/
+
+#png file ignore
+*.png
+*.exe
+*.lnk
+*.csv

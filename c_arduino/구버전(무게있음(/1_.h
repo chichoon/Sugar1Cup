@@ -48,6 +48,25 @@ typedef struct{
    uint16_t C;
 }RGB;
 
+class Hx711
+{
+public:
+  Hx711(uint8_t pin_din, uint8_t pin_slk);
+  virtual ~Hx711();
+  long value();
+  long nomalvalue(byte times = 32);
+  void setOffset(long offset);
+  void setScale(float scale = 742.f);
+  float gram();
+
+private:
+  const uint8_t DOUT;
+  const uint8_t SCK;
+  long _offset;
+  float _scale;
+};
+
+
 static void TCS_Enable(void);
 void TCS_Disable(void);
 static void TCS_Interrupt_Enable();
