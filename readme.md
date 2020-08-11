@@ -23,6 +23,7 @@
 - [x] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
+- [ ] Compare RGB data under different light condition
 - [x] Create function for binary data to RGB 8bit Integer
 - [x] Create Matlab file for 3-axis scatter graph (RGB)
 - [x] Create 3-axis scatter graph
@@ -31,14 +32,12 @@
 - [ ] finish tuning + export for android
 
 ### GyroSensor
-- [ ] Collect data (5+)
-- [ ] Collect data (10+)
-- [ ] Collect data (20+)
-- [ ] Create function for binary data to Pitch/Yaw/Roll Integer
-- [ ] Create Matlab file for 3-axis scatter graph (Pitch, Yaw, Roll)
-- [ ] Create 3-axis scatter graph
-- [ ] Keras neural network initialize
-- [ ] Keras neural network tuning (~ 90%↑ accuracy)
+- [x] Collect data (not need to use keras ?) 
+- [ ] ~~Create function for binary data to Pitch/Yaw/Roll Integer~~
+- [ ] ~~Create Matlab file for 3-axis scatter graph (Pitch, Yaw, Roll)~~
+- [ ] ~~Create 3-axis scatter graph~~
+- [ ] ~~Keras neural network initialize~~
+- [ ] ~~Keras neural network tuning (~ 90%↑ accuracy)~~
 - [ ] finish tuning + export for android
 
 ### Android
