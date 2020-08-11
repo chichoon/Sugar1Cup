@@ -1,13 +1,13 @@
-#code assembled for personal projects (graduation)
+# code assembled for personal projects (graduation)
 
-###Hardware
+### Hardware
 - [ ] Finish soldering Censors (RGB / Gyro I2C, Resistance Sensor, RGB LED, Battery)
 - [ ] Finish coding for arduino / attiny1614 chip
 - [ ] Coat board for moisture / dust resistance
 - [ ] Finish modeling for 3D Printer
 - [ ] Finish printing actual model
 
-###RGB
+### RGB
 - [ ] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
@@ -18,7 +18,7 @@
 - [ ] Keras neural network tuning (~ 90%↑ accuracy)
 - [ ] finish tuning + export for android
 
-###GyroSensor
+### GyroSensor
 - [ ] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
@@ -29,7 +29,7 @@
 - [ ] Keras neural network tuning (~ 90%↑ accuracy)
 - [ ] finish tuning + export for android
 
-###Android
+### Android
 - [ ] Finish organizing UI (XML)
 - [ ] Finish importing Keras layer data for android
 - [ ] Function : collect bin data from sensor & detect beverage
