@@ -1,5 +1,5 @@
-#go bin & pkg
 model/
+binfiles/
 
 #png file ignore
 *.png
