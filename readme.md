@@ -33,9 +33,9 @@
 
 ### GyroSensor
 - [x] Collect data (not need to use keras ?) 
-- [ ] ~~Create function for binary data to Pitch/Yaw/Roll Integer~~
-- [ ] ~~Create Matlab file for 3-axis scatter graph (Pitch, Yaw, Roll)~~
-- [ ] ~~Create 3-axis scatter graph~~
+- [x] Create function for binary data to Pitch/Yaw/Roll Integer
+- [x] Create Matlab file for 3-axis scatter graph
+- [x] Create 3-axis scatter graph
 - [ ] ~~Keras neural network initialize~~
 - [ ] ~~Keras neural network tuning (~ 90%↑ accuracy)~~
 - [ ] finish tuning + export for android
