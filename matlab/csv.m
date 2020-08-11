@@ -29,7 +29,7 @@ for i = 1 : N
     arrC = vertcat(arrC, temp1);
     
     %print individual graph
-    scatter3(X, Y, Z, 25, C, '*');
+    scatter3(X, Y, Z, 25, C, 'filled', 'o', 'MarkerEdgeColor', 'black');
     axis([0 255 0 255 0 255]);
     title(strcat(filename, ' RGB scatter'));
     xlabel('R');
@@ -39,7 +39,7 @@ for i = 1 : N
 end
 %print all-in-one graph with randomly generated color plot
 %arrC = horzcat(arrX, arrY, arrZ) / 255;
-scatter3(arrX, arrY, arrZ, 25, arrC, '*');
+scatter3(arrX, arrY, arrZ, 25, arrC, 'filled', 'o');
 axis([0 255 0 255 0 255]);
 title('RGB scatter');
 xlabel('R');
