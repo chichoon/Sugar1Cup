@@ -1,20 +1,32 @@
 # code assembled for personal projects (graduation)
+- [x] 0715 Meeting
+    - housing design
+    - keras organization
+    - export converted data to csv (Excel) file
+- [x] 0729 Meeting
+    - organize data
+    - create 3-axis graph for RGB (Matlab)
+    - create 3-axis graph for Gyro (Matlab)
+    - housing design
+    - Compare RGB data under different light condition
+- [ ] 0812 Meeting
 
 ### Hardware
-- [ ] Finish soldering Censors (RGB / Gyro I2C, Resistance Sensor, RGB LED, Battery)
-- [ ] Finish coding for arduino / attiny1614 chip
+- [x] Finish soldering Censors (RGB / Gyro I2C, Resistance Sensor, RGB LED, Battery)
+- [x] Finish coding for arduino / attiny1614 chip
 - [ ] Coat board for moisture / dust resistance
-- [ ] Finish modeling for 3D Printer
+- [x] First modeling for 3D Printer
+- [ ] Finish modeling until fit to the cup
 - [ ] Finish printing actual model
 
 ### RGB
-- [ ] Collect data (5+)
+- [x] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
-- [ ] Create function for binary data to RGB 8bit Integer
-- [ ] Create Matlab file for 3-axis scatter graph (RGB)
-- [ ] Create 3-axis scatter graph
-- [ ] Keras neural network initialize
+- [x] Create function for binary data to RGB 8bit Integer
+- [x] Create Matlab file for 3-axis scatter graph (RGB)
+- [x] Create 3-axis scatter graph
+- [x] Keras neural network initialize
 - [ ] Keras neural network tuning (~ 90%↑ accuracy)
 - [ ] finish tuning + export for android
 
