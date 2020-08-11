@@ -5,6 +5,7 @@ import json
 import numpy as np
 from matplotlib import pyplot as plt
 import struct
+import math
 
 
 #raw integer to rgb (0 : 255)
@@ -48,6 +49,17 @@ def getrgb888(r, g, b):
     return rgblist
 
 
+def getpyr(accX, accY, accZ):
+    accelX = int(accX * 3.9)
+    accelY = int(accY * 3.9)
+    accelZ = int(accZ * 3.9)
+    pitch = 180*math.atan(accelX/math.sqrt(accelY*accelY + accelZ*accelZ))/math.pi
+    roll = 180*math.atan(accelY/math.sqrt(accelX*accelX + accelZ*accelZ))/math.pi
+    yaw = 180*math.atan(accelZ/math.sqrt(accelX*accelX + accelZ*accelZ))/math.pi
+    pyrlist = [pitch, roll, yaw]
+    return pyrlist
+
+
 class NumpyEncoder(json.JSONEncoder):
     """ Special json encoder for numpy types """
     def default(self, obj):
@@ -87,7 +99,7 @@ with open(txt_path, 'r') as file:
             #with open(tfname, 'w') as TF: #open json file
                 CF = open(csvname, 'w', newline='')
                 wr = csv.writer(CF) #open csv file
-                wr.writerow(['index', 'AcX', 'AcY', 'AcZ', 'tmp', 'GyX', 'GyY', 'GyZ', 'C', 'R', 'G', 'B', 'PPM']) #csv
+                wr.writerow(['index', 'AcX', 'AcY', 'AcZ', 'tmp', 'GyX', 'GyY', 'GyZ', 'C', 'R', 'G', 'B', 'PPM', 'Pitch', 'Roll', 'Yaw']) #csv
                 #bin_data = {} #json array for dump
                 j = 0
                 img = []
@@ -123,6 +135,7 @@ with open(txt_path, 'r') as file:
                                    (int(struct.unpack('B', BF.read(1))[0]) << 24))
 
                     rgb = getrgb888(c_R, c_G, c_B)
+                    pyr = getpyr(m_AcX, m_AcY, m_AcZ)
                     #create array for json
                     #bin_data[j] = {
                     #    "index": j,
@@ -142,7 +155,7 @@ with open(txt_path, 'r') as file:
                     temp = BF.read(1)  # 0x03 (End of File)
                     
                     #write row for csv (excel)
-                    wr.writerow([j, m_AcX, m_AcY, m_AcZ, tmp, m_GyX, m_GyY, m_GyZ, np.uint16(c_C), np.uint16(rgb[0]), np.uint16(rgb[1]), np.uint16(rgb[2]), PPM])
+                    wr.writerow([j, m_AcX, m_AcY, m_AcZ, tmp, m_GyX, m_GyY, m_GyZ, np.uint16(c_C), np.uint16(rgb[0]), np.uint16(rgb[1]), np.uint16(rgb[2]), PPM, pyr[0], pyr[1], pyr[2]])
                     
                     #plot for color image (png)
                     temp = []
