@@ -9,11 +9,16 @@
     - create 3-axis graph for Gyro (Matlab)
     - housing design
     - Compare RGB data under different light condition
-- [ ] 0812 Meeting
+- [x] 0812 Meeting
+    - add IR sensor for sugar measure
+    - (effective detection for those who has similar color)
+    - add multiplexer for more pins (RGB LED, IR sensor, etc)
+- [ ] 0826 Meeting
 
 ### Hardware
 - [x] Finish soldering Censors (RGB / Gyro I2C, Resistance Sensor, RGB LED, Battery)
-- [x] Finish coding for arduino / attiny1614 chip
+- [ ] Add multiplexer & more sensors (IR, RGBLED, ...)
+- [ ] Finish coding for arduino / attiny1614 chip
 - [ ] Coat board for moisture / dust resistance
 - [x] First modeling for 3D Printer
 - [ ] Finish modeling until fit to the cup
@@ -23,12 +28,13 @@
 - [x] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
-- [ ] Compare RGB data under different light condition
+- [ ] Collect Infrared Data & Compare
+- [x] Compare RGB data under different light condition
 - [x] Create function for binary data to RGB 8bit Integer
 - [x] Create Matlab file for 3-axis scatter graph (RGB)
 - [x] Create 3-axis scatter graph
 - [x] Keras neural network initialize
-- [ ] Keras neural network tuning (~ 90%↑ accuracy)
+- [x] Keras neural network tuning (~ 90%↑ accuracy)
 - [ ] finish tuning + export for android
 
 ### GyroSensor
