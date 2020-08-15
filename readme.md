@@ -28,7 +28,7 @@
 - [x] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
-- [ ] Collect Infrared Data & Compare
+- [ ] Collect Infrared Data & Compare similar color beverage
 - [x] Compare RGB data under different light condition
 - [x] Create function for binary data to RGB 8bit Integer
 - [x] Create Matlab file for 3-axis scatter graph (RGB)
