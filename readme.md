@@ -13,10 +13,13 @@
     - add IR sensor for sugar measure
     - (effective detection for those who has similar color)
     - add multiplexer for more pins (RGB LED, IR sensor, etc)
-- [ ] 0826 Meeting
+- [x] 0826 Meeting
+    - Test IR LED (InGaAs 1450nm LED & Si 950nm LED) and Photodiode
+    - for similar color beverage
+    - Investigate Android - PC server (Keras) - Sensor connection
 
 ### Hardware
-- [x] Finish soldering Censors (RGB / Gyro I2C, Resistance Sensor, RGB LED, Battery)
+- [x] Finish soldering Censors (RGB / Gyro I2C, RGB LED, IR LED, IR photodiode, Battery)
 - [ ] Add multiplexer & more sensors (IR, RGBLED, ...)
 - [ ] Finish coding for arduino / attiny1614 chip
 - [ ] Coat board for moisture / dust resistance
@@ -42,13 +45,11 @@
 - [x] Create function for binary data to Pitch/Yaw/Roll Integer
 - [x] Create Matlab file for 3-axis scatter graph
 - [x] Create 3-axis scatter graph
-- [ ] ~~Keras neural network initialize~~
-- [ ] ~~Keras neural network tuning (~ 90%↑ accuracy)~~
 - [ ] finish tuning + export for android
 
 ### Android
 - [ ] Finish organizing UI (XML)
-- [ ] Finish importing Keras layer data for android
+- [ ] Finish building connection for Android - Keras Server (wifi) - Sensor (Bluetooth)
 - [ ] Function : collect bin data from sensor & detect beverage
 - [ ] Function : collect bin data from sensor & detect whether drank or not
 - [ ] Function : calculate sugar from beverage
