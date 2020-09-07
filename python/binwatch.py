@@ -1,3 +1,4 @@
+
 import sys
 import os
 from PyQt5.QtGui import QIcon
@@ -8,10 +9,10 @@ from PyQt5.QtWidgets import QPushButton, QAction, QMenu, QSystemTrayIcon, qApp, 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 import time
+import binkeras
 
 direction = 'C:/Users/jiyoo/Documents/code/binfiles/binfiles'
 expl = '내 binary 파일을 감시합니다.'
-trainon = '' #become 'Training...' when train processing
 newfile = 0 #number of new files updated after last training
 accuracyN = 0 #accuracy of last training
 costN = 0 #cost of last training
@@ -71,23 +72,50 @@ class Handler(FileSystemEventHandler):
         global newfile
         newfile += 1
         newflag = True
-        print(newfile)
-        print(newflag)
 
 
 class watchThread(QThread): #looping in GUI program
-    signal = pyqtSignal(int)
+    newfilesignal = pyqtSignal(int)
+    newfiletrainsignal = pyqtSignal(int)
     def __init__(self):
         QThread.__init__(self)
     
     def run(self):
-        global newflag
+        global newflag, trainflag
         global newfile
         while True:
-            if newflag : #checks flag (global variable) to see if new file is created
-                self.signal.emit(newfile) #emit signal if so
+            if newflag : #check flag (global variable) to see if new file is created
+                if not trainflag:
+                    self.newfilesignal.emit(newfile)
+                    newflag = False
+                    trainflag = True
+                    self.usleep(100)
+                else:
+                    self.newfiletrainsignal.emit(newfile)
+                    newflag = False
+                    self.usleep(100)
+
+
+
+class trainThread(QThread):
+    trainsignal = pyqtSignal(int)
+    traindonesignal = pyqtSignal(int)
+    def __init__(self):
+        QThread.__init__(self)
+
+    def run(self):
+        global trainflag, newflag
+        global accuracyN, costN, newfile
+        while True:
+            if trainflag:
+                self.sleep(1)
+                self.trainsignal.emit(newfile) #emit signal if so
+                newfile = 0
+                datax, datay = binkeras.createdata(direction)
+                costN, accuracyN = binkeras.func_keras(datax, datay)
+                self.traindonesignal.emit(newfile)
                 newflag = False
-                print(newflag)
+                trainflag = False
                 self.sleep(1)
 
 
@@ -100,6 +128,7 @@ class App(QMainWindow):
         self.widget = QWidget()
         self.ledt = QLineEdit()
         self.watchthread = watchThread()
+        self.trainthread = trainThread()
         self.watch = binfileWatch()
         self.initUI()
         self.initActions()
@@ -119,7 +148,7 @@ class App(QMainWindow):
         self.main_layout = QVBoxLayout() #layout for all-in-one
 
         self.explabel = QLabel(''.join([os.path.splitext(os.path.basename(direction))[0], ' 폴더 내 binary 파일을 감시합니다.']))
-        self.newlabel = QLabel(''.join([str(newfile), ' 개의 신규 파일 존재', trainon]))
+        self.newlabel = QLabel(''.join([str(newfile), ' 개의 신규 파일 존재']))
         self.acclabel = QLabel(''.join(['Model Accuracy : ', str(accuracyN), ' Model Cost : ', str(costN)]))
         self.startbtn = QPushButton('감시 시작')
         self.quitbtn = QPushButton('프로그램 종료')
@@ -152,7 +181,10 @@ class App(QMainWindow):
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
-        self.watchthread.signal.connect(self.showMsgnewfile)
+        self.watchthread.newfilesignal.connect(self.showMsgnewfile)
+        self.watchthread.newfiletrainsignal.connect(self.showMsgnewfiletrain)
+        self.trainthread.trainsignal.connect(self.showMsgtrain)
+        self.trainthread.traindonesignal.connect(self.showMsgtrainDone)
 
         self.setWindowTitle('BinWatchdog')
         self.setWindowIcon(QIcon('icon.png'))
@@ -181,7 +213,37 @@ class App(QMainWindow):
             'New item updated in folder',
             QIcon('icon.ico'),
             2000)
-        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재', trainon])) #update text
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재'])) #update text
+
+
+    def showMsgnewfiletrain(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'New item updated in folder',
+            QIcon('icon.ico'),
+            2000)
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Training...'])) #update text
+
+
+    def showMsgtrain(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'Training Start....',
+            QIcon('icon.ico'),
+            2000)
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Training...']))
+
+
+    def showMsgtrainDone(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'Training Done',
+            QIcon('icon.ico'),
+            2000)
+            
+        self.acclabel.setText(''.join(['Model Accuracy : ', str(round(float(accuracyN), 2)), ' Model Cost : ', str(round(float(costN), 2))]))
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재']))
+
 
             
     def toggleStart(self):
@@ -192,6 +254,7 @@ class App(QMainWindow):
         else:
             self.watch.run()
             self.watchthread.start()
+            self.trainthread.start()
             self.startbtn.setText('감시 종료')
 
     def toggleQuit(self):
