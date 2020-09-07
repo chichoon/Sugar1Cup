@@ -48,8 +48,9 @@
 - [ ] finish tuning + export for android
 
 ### Android
+- [ ] Make Watchdog for PC (Checking binfile update & automatically train background)
 - [ ] Finish organizing UI (XML)
-- [ ] Finish building connection for Android - Keras Server (wifi) - Sensor (Bluetooth)
+- [ ] Finish building connection for Android - Keras (wifi) - Sensor (Bluetooth)
 - [ ] Function : collect bin data from sensor & detect beverage
 - [ ] Function : collect bin data from sensor & detect whether drank or not
 - [ ] Function : calculate sugar from beverage
