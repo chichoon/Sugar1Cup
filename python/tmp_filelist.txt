@@ -24,5 +24,13 @@ C:/Users/jiyoo/Documents/code/binfiles\bin2\strawmilk2.bin
 C:/Users/jiyoo/Documents/code/binfiles\bin2\strawmilk3.bin
 C:/Users/jiyoo/Documents/code/binfiles\bin2\けけ.bin
 C:/Users/jiyoo/Documents/code/binfiles\bin2\けけけ.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\bananamilk.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\bluelemon1.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\demiapple.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\fantaorange.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\fantapineapple.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\miero.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\powerade.bin
+C:/Users/jiyoo/Documents/code/binfiles\binfiles\strawberrymilk.bin
 C:/Users/jiyoo/Documents/code/binfiles\drinkmotion\drink120.bin
 C:/Users/jiyoo/Documents/code/binfiles\drinkmotion\oksusu.bin

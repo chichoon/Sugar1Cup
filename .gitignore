@@ -1,8 +1,11 @@
 model/
 binfiles/
+.vscode/
 
 #png file ignore
 *.png
+*.ico
 *.exe
 *.lnk
 *.csv
+할일정리09.txt
