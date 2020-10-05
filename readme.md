@@ -54,7 +54,7 @@
 - [x] Create 3-axis scatter graph
 
 ### Android
-- [x]] Make Watchdog for PC (Checking binfile update & automatically train background)
+- [x] Make Watchdog for PC (Checking binfile update & automatically train background)
 - [ ] Finish organizing UI (XML)
 - [ ] Finish building connection for Android - Keras (wifi) - Sensor (Bluetooth)
 - [ ] Function : collect bin data from sensor & detect beverage
