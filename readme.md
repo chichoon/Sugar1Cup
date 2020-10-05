@@ -17,6 +17,14 @@
     - Test IR LED (InGaAs 1450nm LED & Si 950nm LED) and Photodiode
     - for similar color beverage
     - Investigate Android - PC server (Keras) - Sensor connection
+- [x] 0909 Meeting
+- [x] 0923 Meeting
+    - Test IR sensor on similar color beverage
+- [x] 1005 Meeting
+    - Start hardware soldering
+    - Start Android App programming
+    - refine 3D modeling design
+    - Start collecting train values
 
 ### Hardware
 - [x] Finish soldering Censors (RGB / Gyro I2C, RGB LED, IR LED, IR photodiode, Battery)
@@ -31,24 +39,22 @@
 - [x] Collect data (5+)
 - [ ] Collect data (10+)
 - [ ] Collect data (20+)
-- [ ] Collect Infrared Data & Compare similar color beverage
+- [x] Collect Infrared Data & Compare similar color beverage
 - [x] Compare RGB data under different light condition
 - [x] Create function for binary data to RGB 8bit Integer
 - [x] Create Matlab file for 3-axis scatter graph (RGB)
 - [x] Create 3-axis scatter graph
 - [x] Keras neural network initialize
 - [x] Keras neural network tuning (~ 90%↑ accuracy)
-- [ ] finish tuning + export for android
 
 ### GyroSensor
 - [x] Collect data (not need to use keras ?) 
 - [x] Create function for binary data to Pitch/Yaw/Roll Integer
 - [x] Create Matlab file for 3-axis scatter graph
 - [x] Create 3-axis scatter graph
-- [ ] finish tuning + export for android
 
 ### Android
-- [ ] Make Watchdog for PC (Checking binfile update & automatically train background)
+- [x]] Make Watchdog for PC (Checking binfile update & automatically train background)
 - [ ] Finish organizing UI (XML)
 - [ ] Finish building connection for Android - Keras (wifi) - Sensor (Bluetooth)
 - [ ] Function : collect bin data from sensor & detect beverage
