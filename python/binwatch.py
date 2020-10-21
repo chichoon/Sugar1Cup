@@ -11,7 +11,7 @@ from watchdog.observers import Observer
 import time
 import binkeras
 
-direction = 'C:/Users/jiyoo/Documents/code/binfiles/binfiles'
+direction = 'C:/Users/jiyoo/Documents/code/binfiles'
 expl = '내 binary 파일을 감시합니다.'
 newfile = 0 #number of new files updated after last training
 accuracyN = 0 #accuracy of last training
