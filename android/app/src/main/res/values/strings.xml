@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GradProject2020</string>
+    <string name="loading">로딩 이미지</string>
+    <string name="blank">　</string>
+</resources>
