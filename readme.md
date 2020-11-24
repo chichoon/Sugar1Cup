@@ -1,5 +1,7 @@
 # Code assembled for Sugar1Cup (Graduation Project - Electronic Engineering)
 
+![Hardware GIF](hardware.gif)
+
 ## File Guide
 ### android_app
 - android app file (java)
