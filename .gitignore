@@ -1,6 +1,8 @@
 model/
 binfiles/
 .vscode/
+python/.ipynb_checkpoints
+python/__pycache__
 
 #png file ignore
 *.exe
