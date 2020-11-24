@@ -3,8 +3,6 @@ binfiles/
 .vscode/
 
 #png file ignore
-*.png
-*.ico
 *.exe
 *.lnk
 *.csv

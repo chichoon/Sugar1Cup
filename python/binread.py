@@ -84,8 +84,9 @@ with open(txt_path, 'wt') as f:
         if files:
             for file in files:
                 if file.find('.bin') > 0:
-                    filename = os.path.join(root, file)
-                    f.write(filename + '\n')
+                    if file.find('temp.bin') < 0:
+                        filename = os.path.join(root, file)
+                        f.write(filename + '\n')
 
 with open(txt_path, 'r') as file:
     lines = file.readlines()
@@ -99,7 +100,7 @@ with open(txt_path, 'r') as file:
             #with open(tfname, 'w') as TF: #open json file
                 CF = open(csvname, 'w', newline='')
                 wr = csv.writer(CF) #open csv file
-                wr.writerow(['index', 'AcX', 'AcY', 'AcZ', 'tmp', 'GyX', 'GyY', 'GyZ', 'C', 'R', 'G', 'B', 'PPM', 'Pitch', 'Roll', 'Yaw']) #csv
+                wr.writerow(['index', 'R', 'G', 'B', 'IR']) #csv
                 #bin_data = {} #json array for dump
                 j = 0
                 img = []
@@ -107,55 +108,22 @@ with open(txt_path, 'r') as file:
                     temp = BF.read(1)  # 0x02 (Start of File)
                     if not temp: break
                     #bin to actual integer
-                    m_AcX = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    m_AcY = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    m_AcZ = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    tmp = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    m_GyX = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    m_GyY = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    m_GyZ = np.int16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    c_C = np.uint16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
                     c_R = np.uint16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
                                      (int(struct.unpack('B', BF.read(1))[0]) << 8))
                     c_G = np.uint16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
                                      (int(struct.unpack('B', BF.read(1))[0]) << 8))
                     c_B = np.uint16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
                                      (int(struct.unpack('B', BF.read(1))[0]) << 8))
-                    PPM = np.int(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
-                                   (int(struct.unpack('B', BF.read(1))[0]) << 8) |
-                                   (int(struct.unpack('B', BF.read(1))[0]) << 16) |
-                                   (int(struct.unpack('B', BF.read(1))[0]) << 24))
+                    irs = np.uint16(0x0000 | int(struct.unpack('B', BF.read(1))[0]) |
+                                     (int(struct.unpack('B', BF.read(1))[0]) << 8))
 
                     rgb = getrgb888(c_R, c_G, c_B)
-                    pyr = getpyr(m_AcX, m_AcY, m_AcZ)
-                    #create array for json
-                    #bin_data[j] = {
-                    #    "index": j,
-                    #    "m_AcX": m_AcX,
-                    #    "m_AcY": m_AcY,
-                    #    "m_AcZ": m_AcZ,
-                    #    "tmp": tmp,
-                    #    "m_GyX": m_GyX,
-                    #    "m_GyY": m_GyY,
-                    #    "m_GyZ": m_GyZ,
-                    #    "C": np.uint16(c_C),
-                    #    "R": rgb[0],
-                    #    "G": rgb[1],
-                    #    "B": rgb[2],
-                    #    "PPM": PPM
-                    #    }
-                    temp = BF.read(1)  # 0x03 (End of File)
+                    temp = int(struct.unpack('B', BF.read(1))[0])  # 0x03 (End of File)
+                    if temp != 3:
+                        temp = BF.read(1)
                     
                     #write row for csv (excel)
-                    wr.writerow([j, m_AcX, m_AcY, m_AcZ, tmp, m_GyX, m_GyY, m_GyZ, np.uint16(c_C), np.uint16(rgb[0]), np.uint16(rgb[1]), np.uint16(rgb[2]), PPM, pyr[0], pyr[1], pyr[2]])
+                    wr.writerow([j, np.uint16(rgb[0]), np.uint16(rgb[1]), np.uint16(rgb[2]), irs])
                     
                     #plot for color image (png)
                     temp = []

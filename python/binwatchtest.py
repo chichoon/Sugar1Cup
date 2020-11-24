@@ -9,15 +9,20 @@ from PyQt5.QtWidgets import QPushButton, QAction, QMenu, QSystemTrayIcon, qApp, 
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 import time
-import binkeras
+import binkeras_load #for testing
+import binkeras #for training
 
-direction = 'C:/Users/jiyoo/Documents/code/binfiles(old)/bin'
+direction = 'C:/Users/jiyoo/Documents/code/binfiles'
 expl = '내 binary 파일을 감시합니다.'
 newfile = 0 #number of new files updated after last training
+firstname = ' '
+firstacc = 0
 accuracyN = 0 #accuracy of last training
 costN = 0 #cost of last training
 trainflag = False #whether it is training or not
-newflag = False
+testingflag = False #whether it is testing or not
+kerasflag = False #turn on binkeras
+testflag = False #turn on binread
 
 
 class Singleton(object): #allows only one process working
@@ -68,44 +73,71 @@ class Handler(FileSystemEventHandler):
         
     
     def on_created(self, event): #executed when file is created in folder
-        global newflag
         global newfile
-        newfile += 1
-        newflag = True
+        global kerasflag
+        global testflag
+
+        fname, ext = os.path.splitext(os.path.basename(event.src_path))
+        if ext == '.bin':
+            if fname == 'temp':
+                testflag = True
+            else:
+                kerasflag = True
+
+            newfile += 1
 
 
 class watchThread(QThread): #looping in GUI program
-    newfilesignal = pyqtSignal(int)
-    newfiletrainsignal = pyqtSignal(int)
+    newtempsignal = pyqtSignal(int)
+    newtemptestsignal = pyqtSignal(int)
+    newbinsignal = pyqtSignal(int)
+    newbintrainsignal = pyqtSignal(int)
+
     def __init__(self):
         QThread.__init__(self)
     
     def run(self):
-        global newflag, trainflag
+        global trainflag, testingflag, kerasflag, testflag
         global newfile
         while True:
-            if newflag : #check flag (global variable) to see if new file is created
+            if kerasflag : #check flag (global variable) to see if new file is created
                 if not trainflag:
-                    self.newfilesignal.emit(newfile)
-                    newflag = False
+                    self.newbinsignal.emit(newfile)
+                    kerasflag = False
                     trainflag = True
                     self.usleep(100)
                 else:
-                    self.newfiletrainsignal.emit(newfile)
-                    newflag = False
+                    self.newbintrainsignal.emit(newfile)
+                    kerasflag = False
                     self.usleep(100)
+
+            elif testflag:
+                if not testingflag:
+                    self.newtempsignal.emit(newfile)
+                    testflag = False
+                    testingflag = True
+                    self.usleep(100)
+
+                else:
+                    self.newtemptestsignal.emit(newfile)
+                    testflag = False
+                    self.usleep(100)
+
 
 
 
 class trainThread(QThread):
     trainsignal = pyqtSignal(int)
     traindonesignal = pyqtSignal(int)
+    testsignal = pyqtSignal(int)
+    testdonesignal = pyqtSignal(int)
+
     def __init__(self):
         QThread.__init__(self)
 
     def run(self):
-        global trainflag, newflag
-        global accuracyN, costN, newfile
+        global trainflag, testingflag, kerasflag, testflag
+        global costN, accuracyN, firstname, firstacc, newfile
         while True:
             if trainflag:
                 self.sleep(1)
@@ -117,6 +149,20 @@ class trainThread(QThread):
                 newflag = False
                 trainflag = False
                 self.sleep(1)
+            elif testingflag :
+                self.sleep(1)
+                self.testsignal.emit(newfile) #emit signal if so
+                newfile = 0
+                list1 = binkeras_load.func_keras_test()
+                binkeras_load.send_server(list1)
+                firstname = list1[0][0]
+                firstacc = list1[0][1]
+                self.testdonesignal.emit(newfile)
+                newflag = False
+                testingflag = False
+                os.remove('C:/Users/jiyoo/Documents/code/binfiles/temp.bin')
+                self.sleep(1)
+
 
 
 
@@ -149,7 +195,7 @@ class App(QMainWindow):
 
         self.explabel = QLabel(''.join([os.path.splitext(os.path.basename(direction))[0], ' 폴더 내 binary 파일을 감시합니다.']))
         self.newlabel = QLabel(''.join([str(newfile), ' 개의 신규 파일 존재']))
-        self.acclabel = QLabel(''.join(['Model Accuracy : ', str(accuracyN), ' Model Cost : ', str(costN)]))
+        self.acclabel = QLabel(''.join(['Model Accuracy : ', str(round(float(accuracyN), 2)), ' Model Cost : ', str(round(float(costN), 2))]))
         self.startbtn = QPushButton('감시 시작')
         self.quitbtn = QPushButton('프로그램 종료')
 
@@ -181,10 +227,14 @@ class App(QMainWindow):
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
-        self.watchthread.newfilesignal.connect(self.showMsgnewfile)
-        self.watchthread.newfiletrainsignal.connect(self.showMsgnewfiletrain)
+        self.watchthread.newtempsignal.connect(self.showMsgnewtemp)
+        self.watchthread.newbinsignal.connect(self.showMsgnewbin)
+        self.watchthread.newbintrainsignal.connect(self.showMsgnewbintrain)
+        self.watchthread.newtemptestsignal.connect(self.showMsgnewtemptest)
         self.trainthread.trainsignal.connect(self.showMsgtrain)
+        self.trainthread.testsignal.connect(self.showMsgtest)
         self.trainthread.traindonesignal.connect(self.showMsgtrainDone)
+        self.trainthread.testdonesignal.connect(self.showMsgtestDone)
 
         self.setWindowTitle('BinWatchdog')
         self.setWindowIcon(QIcon('icon.png'))
@@ -207,22 +257,40 @@ class App(QMainWindow):
             2000)
             
 
-    def showMsgnewfile(self, val): #executes if gain signal from thread
+    def showMsgnewbin(self, val): #executes if gain signal from thread
         self.tray_icon.showMessage(
             'BinWatchDog',
-            'New item updated in folder',
+            'New binfile updated in folder',
             QIcon('icon.ico'),
             2000)
         self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재'])) #update text
 
 
-    def showMsgnewfiletrain(self, val): #executes if gain signal from thread
+    def showMsgnewbintrain(self, val): #executes if gain signal from thread
         self.tray_icon.showMessage(
             'BinWatchDog',
-            'New item updated in folder',
+            'New binfile updated in folder',
             QIcon('icon.ico'),
             2000)
         self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Training...'])) #update text
+
+        
+    def showMsgnewtemp(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'New tempfile updated in folder',
+            QIcon('icon.ico'),
+            2000)
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재'])) #update text
+
+
+    def showMsgnewtemptest(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'New tempfile updated in folder',
+            QIcon('icon.ico'),
+            2000)
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Testing...'])) #update text
 
 
     def showMsgtrain(self, val): #executes if gain signal from thread
@@ -231,7 +299,7 @@ class App(QMainWindow):
             'Training Start....',
             QIcon('icon.ico'),
             2000)
-        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Training...']))
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Testing...']))
 
 
     def showMsgtrainDone(self, val): #executes if gain signal from thread
@@ -242,6 +310,25 @@ class App(QMainWindow):
             2000)
             
         self.acclabel.setText(''.join(['Model Accuracy : ', str(round(float(accuracyN), 2)), ' Model Cost : ', str(round(float(costN), 2))]))
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재']))
+
+    def showMsgtest(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'Testing Start....',
+            QIcon('icon.ico'),
+            2000)
+        self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재, Testing...']))
+
+
+    def showMsgtestDone(self, val): #executes if gain signal from thread
+        self.tray_icon.showMessage(
+            'BinWatchDog',
+            'Testing Done',
+            QIcon('icon.ico'),
+            2000)
+            
+        self.acclabel.setText(''.join(['유력한 추측 : ', firstname, ' 확률 : ', str(firstacc)]))
         self.newlabel.setText(''.join([str(val), ' 개의 신규 파일 존재']))
 
             
