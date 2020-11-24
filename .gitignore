@@ -3,6 +3,7 @@ binfiles/
 .vscode/
 python/.ipynb_checkpoints
 python/__pycache__
+icon/
 
 #png file ignore
 *.exe
