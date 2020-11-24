@@ -560,7 +560,7 @@ public class BTScreen extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!ftp.ftpConnect("192.168.0.11", "taeil", "120415", 21)) {
+                    if (!ftp.ftpConnect("<IP ADDRESS HERE>", "<ID HERE>", "<PW HERE>", 21)) {
                         threadflag = false;
                     } else {
                         String dir = ftp.ftpGetDirectory();
@@ -582,7 +582,7 @@ public class BTScreen extends Fragment {
             Thread socketthread = new Thread() {
                 public void run() {
                     try {
-                        socket = new Socket("192.168.0.11", 9999);
+                        socket = new Socket("<IP ADDRESS HERE>", 9999);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
