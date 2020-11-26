@@ -2,6 +2,10 @@
 
 ![Hardware GIF](hardware.gif)
 
+[demonstration video (korean)](https://youtu.be/0kxJtmD7aic)
+
+[presentation video (korean)](https://youtu.be/JzAsX-PdNuc)
+
 ## File Guide
 ### android_app
 - android app file (java)
